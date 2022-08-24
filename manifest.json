@@ -1,0 +1,24 @@
+{
+  "name": "NTU GPA Calculator",
+  "description": "交換、推甄、出國留學必裝",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+      "service_worker": "background.js"
+  },
+  "permissions": ["storage", "activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://reg.aca.ntu.edu.tw/GradeCheck/StudentGCForm"],
+      "css": ["mystyles.css"],
+      "run_at": "document_end",
+      "js": ["getGrade.js"]
+    }
+  ],
+  "icons": {
+      "128": "/logo.png"
+  }
+}
