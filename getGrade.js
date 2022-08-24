@@ -53,18 +53,20 @@ function getRecords(option = "overall") {
     if (option == "selection") {
         rows = rows.filter(row => row.getElementsByClassName('course-selection')[0].checked)
     } else if (option == "last60") {
-        rows = rows.sort((a, b) => a < b ? 1 : -1);
+        rows = rows.sort((a, b) => a.innerText.split('\t')[2].trim() < b.innerText.split('\t')[2].trim() ? 1 : -1);
         var cumCredits = 0;
         var last60rows = [];
         var prevRowSem = "";
         for (const row of rows) {
             const entries = row.innerText.split('\t');
-            cumCredits += Number(entries[entries.length - 3].trim());
-            last60rows.push(row)
+            if (entries[entries.length - 2].trim() in gpaLookup) {
+                cumCredits += Number(entries[entries.length - 3].trim());
+            }
             // keep adding the whole semester even if credits > 60
             if (cumCredits > 60 && entries[2].trim() != prevRowSem) {
                 break;
             }
+            last60rows.push(row)
             prevRowSem = entries[2].trim();
         }
         rows = last60rows;
