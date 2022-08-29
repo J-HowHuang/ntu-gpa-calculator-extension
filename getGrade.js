@@ -171,21 +171,23 @@ function insertCheckboxes() {
                 var cloneth = generateCheckbox(id);
                 if (!(tr.childNodes[7].innerText.trim() in gpaLookup)) {
                     cloneth.childNodes[0].disabled = true;
-                    cloneth.childNodes[0].checked = true;
+                    cloneth.childNodes[0].checked = false;
+                } else {
+                    // for easier select the checkboxes
+                    tr.style = 'cursor: pointer; cursor: hand;';
+                    tr.addEventListener('click', e => {
+                        e.currentTarget.getElementsByTagName('input')[0].click();
+                        var selectAllCheckbox = e.currentTarget.parentNode.parentNode.parentNode.previousSibling.getElementsByTagName('input')[0]; // corresponding select all checkbox
+                        var trs = e.currentTarget.parentNode.childNodes
+                        var hasSelectedAll = Array.prototype.slice.call(trs).every(tr => 
+                            tr.getElementsByTagName('input')[0].checked || !(tr.childNodes[8].innerText.trim() in gpaLookup)); // ignore those disabled checkboxes
+                        if (hasSelectedAll) {
+                            selectAllCheckbox.checked = true;
+                        } else {
+                            selectAllCheckbox.checked = false;
+                        }
+                    });
                 }
-                // for easier select the checkboxes
-                tr.style = 'cursor: pointer; cursor: hand;';
-                tr.addEventListener('click', e => {
-                    e.currentTarget.getElementsByTagName('input')[0].click();
-                    var selectAllCheckbox = e.currentTarget.parentNode.parentNode.parentNode.previousSibling.getElementsByTagName('input')[0]; // corresponding select all checkbox
-                    var trs = e.currentTarget.parentNode.childNodes
-                    var hasSelectedAll = Array.prototype.slice.call(trs).every(tr => tr.getElementsByTagName('input')[0].checked);
-                    if (hasSelectedAll) {
-                        selectAllCheckbox.checked = true;
-                    } else {
-                        selectAllCheckbox.checked = false;
-                    }
-                });
                 tr.insertBefore(cloneth, tr.firstChild);
             }
         }
@@ -215,7 +217,8 @@ function insertCheckboxes() {
         checkbox.addEventListener('click', e => {
             var table = e.currentTarget.parentNode.parentNode.nextSibling;
             var trs = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-            var hasSelectedAll = Array.prototype.slice.call(trs).every(tr => tr.getElementsByTagName('input')[0].checked);
+            var hasSelectedAll = Array.prototype.slice.call(trs).every(tr => 
+                tr.getElementsByTagName('input')[0].checked || !(tr.childNodes[8].innerText.trim() in gpaLookup)); // ignore those disabled checkboxes
             if (hasSelectedAll == true) {
                 for (const tr of trs) {
                     var checkbox = tr.getElementsByTagName('input')[0];
