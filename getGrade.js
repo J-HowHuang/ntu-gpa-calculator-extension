@@ -135,10 +135,20 @@ function insertCheckboxes() {
         checkbox.type = "checkbox";
         checkbox.id = id
         checkbox.checked = true;
-        checkbox.onclick = () => {
+        checkbox.addEventListener('click', e => {
             syncGrade("selection");
             updateSelectedCount();
-        };
+            var selectAllCheckbox = e.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode.previousSibling.getElementsByTagName('input')[0]; // corresponding select all checkbox
+            var trs = e.currentTarget.parentNode.parentNode.parentNode.childNodes
+            var hasSelectedAll = Array.prototype.slice.call(trs).every(tr => 
+                tr.getElementsByTagName('input')[0].checked || !(tr.childNodes[8].innerText.trim() in gpaLookup)); // ignore those disabled checkboxes
+            if (hasSelectedAll) {
+                selectAllCheckbox.checked = true;
+            } else {
+                selectAllCheckbox.checked = false;
+            }
+            e.stopPropagation();
+        });
 
         td.appendChild(checkbox);
         td.style = "text-align: center;"
@@ -177,15 +187,6 @@ function insertCheckboxes() {
                     tr.style = 'cursor: pointer; cursor: hand;';
                     tr.addEventListener('click', e => {
                         e.currentTarget.getElementsByTagName('input')[0].click();
-                        var selectAllCheckbox = e.currentTarget.parentNode.parentNode.parentNode.previousSibling.getElementsByTagName('input')[0]; // corresponding select all checkbox
-                        var trs = e.currentTarget.parentNode.childNodes
-                        var hasSelectedAll = Array.prototype.slice.call(trs).every(tr => 
-                            tr.getElementsByTagName('input')[0].checked || !(tr.childNodes[8].innerText.trim() in gpaLookup)); // ignore those disabled checkboxes
-                        if (hasSelectedAll) {
-                            selectAllCheckbox.checked = true;
-                        } else {
-                            selectAllCheckbox.checked = false;
-                        }
                     });
                 }
                 tr.insertBefore(cloneth, tr.firstChild);

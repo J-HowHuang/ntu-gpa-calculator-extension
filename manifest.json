@@ -1,7 +1,7 @@
 {
   "name": "NTU GPA Calculator",
   "description": "交換、推甄、出國留學必裝",
-  "version": "1.1",
+  "version": "1.1.1",
   "manifest_version": 3,
   "background": {
       "service_worker": "background.js"
